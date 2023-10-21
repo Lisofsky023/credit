@@ -14,42 +14,37 @@ document.addEventListener('DOMContentLoaded', function() {
   
         return ((loanAmount - initialPayment) * Math.pow((1 + interestRateMonthly), loanTermMonths) * interestRateMonthly) / (Math.pow((1 + interestRateMonthly), loanTermMonths) - 1);
     }
-  
-    function saveToLocalStorage() {
-        localStorage.setItem('loanAmount', document.getElementById('loanAmount').value);
-        localStorage.setItem('initialPayment', document.getElementById('initialPayment').value);
-        localStorage.setItem('interestRate', document.getElementById('interestRate').value);
-        localStorage.setItem('loanTerm', document.getElementById('loanTerm').value);
-    }
-  
-    document.getElementById('calculateButton').addEventListener('click', function() {
-        const monthlyPayment = calculateMonthlyPayment();
-        document.getElementById('monthlyPaymentResult').innerText = `${monthlyPayment.toFixed(2)} ₽`;
-        document.getElementById('toFeedbackFormButton').removeAttribute('disabled');
-        saveToLocalStorage();
+
+    const inputFields = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm'];
+
+    inputFields.forEach(id => {
+        const inputElement = document.getElementById(id);
+        if (inputElement) {
+            inputElement.addEventListener('input', function() {
+                if (allFieldsFilled()) {
+                    const monthlyPayment = calculateMonthlyPayment();
+                    document.getElementById('monthlyPaymentResult').innerText = `${monthlyPayment.toFixed(2)} ₽`;
+                    document.getElementById('toFeedbackFormButton').removeAttribute('disabled');
+                }
+                saveToLocalStorage();
+            });
+        }
     });
-  
-    const ids = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm', 'monthlyPaymentResult'];
-      ids.forEach(id => {
-          const element = document.getElementById(id);
-          const value = localStorage.getItem(id);
-          if (value !== null && element) {
-              element.value = value;
-          }
-          if (element) {
-              element.addEventListener('change', function() {
-                  localStorage.setItem(id, this.value);
-              });
-          }
-      });
-  
-      document.getElementById('toFeedbackFormButton').addEventListener('click', function () {
-          document.getElementById('calculatorScreen').classList.add('hidden');
-          document.getElementById('feedbackFormScreen').classList.remove('hidden');
-      });
-      document.getElementById('backToCalculator').addEventListener('click', function() {
-          document.getElementById('feedbackFormScreen').classList.add('hidden');
-          document.getElementById('calculatorScreen').classList.remove('hidden');
-      });
+    
+    function allFieldsFilled() {
+        return inputFields.every(id => {
+            const inputElement = document.getElementById(id);
+            return inputElement && inputElement.value.trim() !== '';
+        });
+    }
+    
+    document.getElementById('toFeedbackFormButton').addEventListener('click', function () {
+        document.getElementById('calculatorScreen').classList.add('hidden');
+        document.getElementById('feedbackFormScreen').classList.remove('hidden');
+    });
+    document.getElementById('backToCalculator').addEventListener('click', function() {
+        document.getElementById('feedbackFormScreen').classList.add('hidden');
+        document.getElementById('calculatorScreen').classList.remove('hidden');
+    });
   });
   

@@ -121,31 +121,26 @@ document.addEventListener('DOMContentLoaded', function () {
     var loanTermMonths = loanTermYears * 12;
     return (loanAmount - initialPayment) * Math.pow(1 + interestRateMonthly, loanTermMonths) * interestRateMonthly / (Math.pow(1 + interestRateMonthly, loanTermMonths) - 1);
   }
-  function saveToLocalStorage() {
-    localStorage.setItem('loanAmount', document.getElementById('loanAmount').value);
-    localStorage.setItem('initialPayment', document.getElementById('initialPayment').value);
-    localStorage.setItem('interestRate', document.getElementById('interestRate').value);
-    localStorage.setItem('loanTerm', document.getElementById('loanTerm').value);
-  }
-  document.getElementById('calculateButton').addEventListener('click', function () {
-    var monthlyPayment = calculateMonthlyPayment();
-    document.getElementById('monthlyPaymentResult').innerText = "".concat(monthlyPayment.toFixed(2), " \u20BD");
-    document.getElementById('toFeedbackFormButton').removeAttribute('disabled');
-    saveToLocalStorage();
-  });
-  var ids = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm', 'monthlyPaymentResult'];
-  ids.forEach(function (id) {
-    var element = document.getElementById(id);
-    var value = localStorage.getItem(id);
-    if (value !== null && element) {
-      element.value = value;
-    }
-    if (element) {
-      element.addEventListener('change', function () {
-        localStorage.setItem(id, this.value);
+  var inputFields = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm'];
+  inputFields.forEach(function (id) {
+    var inputElement = document.getElementById(id);
+    if (inputElement) {
+      inputElement.addEventListener('input', function () {
+        if (allFieldsFilled()) {
+          var monthlyPayment = calculateMonthlyPayment();
+          document.getElementById('monthlyPaymentResult').innerText = "".concat(monthlyPayment.toFixed(2), " \u20BD");
+          document.getElementById('toFeedbackFormButton').removeAttribute('disabled');
+        }
+        saveToLocalStorage();
       });
     }
   });
+  function allFieldsFilled() {
+    return inputFields.every(function (id) {
+      var inputElement = document.getElementById(id);
+      return inputElement && inputElement.value.trim() !== '';
+    });
+  }
   document.getElementById('toFeedbackFormButton').addEventListener('click', function () {
     document.getElementById('calculatorScreen').classList.add('hidden');
     document.getElementById('feedbackFormScreen').classList.remove('hidden');
