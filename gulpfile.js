@@ -4,6 +4,7 @@ const {src, dest} = require("gulp");
 const gulp = require("gulp");
 const twig = require('gulp-twig');
 const babel = require('gulp-babel');
+const concat = require('gulp-concat');
 const rigger = require("gulp-rigger");
 const autoprefixer = require("gulp-autoprefixer");
 const cssbeautify = require("gulp-cssbeautify");
@@ -25,18 +26,21 @@ const path = {
     css: distPath + "assets/css/",
     js: "dist/assets/js/",
     fonts: distPath + "assets/fonts/",
+    img: distPath + "assets/images/",
   },
   src: {
     html: srcPath + "*.twig",
     css: srcPath + "assets/scss/*.scss",
     js: srcPath + "assets/js/*.js",
     fonts: srcPath + "assets/fonts/**/*.{eot,woff,woff2,ttf,svg}",
+    img: srcPath + "assets/images/**/*.{jpg,jpeg,png,gif,svg}",
   },
   watch: {
     html: srcPath + "**/*.twig",
     js: srcPath + "assets/js/**/*.js",
     css: srcPath + "assets/scss/**/*.scss",
     fonts: srcPath + "assets/fonts/**/*.{eot,woff,woff2,ttf,svg}",
+    img: srcPath + "assets/images/**/*.{jpg,jpeg,png,gif,svg}",
   },
   clean: "./" + distPath
 }
@@ -79,28 +83,8 @@ function css() {
     .pipe(dest(path.build.css))
 }
 
-// function js() {
-//   return src(path.src.js, {base: srcPath + "assets/js/"})
-//     .pipe(plumber({
-//       errorHandler: function(err) {
-//         notify.onError({
-//           title: "JavaScript Error",
-//           message: "Error: <%= error.message %>",
-//         })(err);
-//         this.emit('end')
-//       }
-//     }))
-//     .pipe(rigger())
-//     .pipe(dest(path.build.js))
-//     .pipe(uglify())
-//     .pipe(rename({
-//       suffix: ".min",
-//       extname: ".js"
-//     }))
-//     .pipe(dest(path.build.js))
-// }
 function js() {
-  return src(path.src.js, {base: srcPath + "assets/js/"})
+  return src(path.src.js)
     .pipe(plumber({
       errorHandler: function(err) {
         notify.onError({
@@ -114,6 +98,7 @@ function js() {
     .pipe(babel({
       presets: ['@babel/env']
     }))
+    .pipe(concat('main.js'))
     .pipe(dest(path.build.js))
     .pipe(uglify())
     .pipe(rename({
@@ -121,30 +106,37 @@ function js() {
       extname: ".js"
     }))
     .pipe(dest(path.build.js))
-}
+};
 
 function fonts() {
   return src(path.src.fonts, {base: srcPath + "assets/fonts/"})
-}
+};
+
+function images() {
+  return src(path.src.img)
+    .pipe(dest(path.build.img));
+};
 
 function clean() {
-  return del(path.clean)
+  return del(path.clean);
 };
 
 function watchFiles() {
-  gulp.watch([srcPath + "**/*.twig"], html)
-  gulp.watch([path.watch.css], css)
-  gulp.watch([path.watch.js], js)
-  gulp.watch([path.watch.fonts], fonts)
+  gulp.watch([srcPath + "**/*.twig"], html);
+  gulp.watch([path.watch.css], css);
+  gulp.watch([path.watch.js], js);
+  gulp.watch([path.watch.fonts], fonts);
+  gulp.watch([path.watch.img], images);
 };
 
-const build = gulp.series(clean, gulp.parallel(html, css, js, fonts))
-const watch = gulp.parallel(build, watchFiles)
+const build = gulp.series(clean, gulp.parallel(html, css, js, fonts, images));
+const watch = gulp.parallel(build, watchFiles);
 
-exports.html = html
-exports.css = css
-exports.js = js
-exports.fonts = fonts
-exports.clean = clean
-exports.build = build
-exports.watch = watch
+exports.html = html;
+exports.css = css;
+exports.js = js;
+exports.fonts = fonts;
+exports.images = images;
+exports.clean = clean;
+exports.build = build;
+exports.watch = watch;
