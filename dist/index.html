@@ -12,25 +12,17 @@
 <body>
   <div class="container">
     <section id="calculatorScreen" class="calculator">
+
+      <button id="calculateButton" class="calculator__button calculator__button_type_calculate" type="button">Рассчитайте платеж</button>
+
       <form class="calculator__inputs">
-        <button id="calculateButton" class="calculator__button calculator__button_type_calculate" type="button">Рассчитайте платеж</button>
         <fieldset>
-          <!-- <label for="loanAmount">
-            Сумма займа: -->
+
             <input id="loanAmount" type="number" class="calculator__input calculator__input_type_loan-amount" placeholder="Сумма займа">
-          </label>
-          <!-- <label for="initialPayment">
-            Первоначальный взнос: -->
             <input id="initialPayment" type="number" class="calculator__input calculator__input_type_initial-payment" placeholder="Первоначальный взнос">
-          </label>
-          <!-- <label for="interestRate">
-            Процентная ставка: -->
             <input id="interestRate" type="number" class="calculator__input calculator__input_type_interest-rate" placeholder="Процентная ставка" step="0.01">
-          </label>
-          <!-- <label for="loanTerm">
-            Срок кредитования: -->
             <input id="loanTerm" type="number" class="calculator__input calculator__input_type_loan-term" placeholder="Срок кредитования">
-          </label>
+
         </fieldset>
           <div class="calculator__monthly-payment">
             <h2 class="calculator__monthly-payment-title">Ежемесячный платеж</h2>
@@ -49,26 +41,22 @@
         <h2 class="feedback-form__title">Оставьте заявку</h2>
       </div>
 
-      <form>
+      <form  class="feedback-form__form">
 
-        <!-- <fieldset> -->
-        <input id="lastName" type="text" class="feedback-form__input feedback-form__input_type_last-name" placeholder="Фамилия" required>
-        <span id="lastNameError" class="feedback-form__error feedback-form__error_type_last-name"></span>
-        <input id="firstName" type="text" class="feedback-form__input feedback-form__input_type_first-name" placeholder="Имя" required>
-        <span id="firstNameError" class="feedback-form__error feedback-form__error_type_first-name"></span>
-        <input id="middleName" type="text" class="feedback-form__input feedback-form__input_type_middle-name" placeholder="Отчество">
-        <span id="middleNameError" class="feedback-form__error feedback-form__error_type_middle-name"></span>
-        <input id="phoneNumber" type="tel" class="feedback-form__input feedback-form__input_type_phone-number" placeholder="Телефон" required>
-        <span id="phoneNumberError" class="feedback-form__error feedback-form__error_type_phone-number"></span> 
-
+        <fieldset class="feedback-form__form-fieldset">
+          <input id="lastName" type="text" class="feedback-form__input feedback-form__input_type_last-name" placeholder="Фамилия" required>
+          <span id="lastNameError" class="feedback-form__error feedback-form__error_type_last-name"></span>
+          <input id="firstName" type="text" class="feedback-form__input feedback-form__input_type_first-name" placeholder="Имя" required>
+          <span id="firstNameError" class="feedback-form__error feedback-form__error_type_first-name"></span>
+          <input id="middleName" type="text" class="feedback-form__input feedback-form__input_type_middle-name" placeholder="Отчество">
+          <span id="middleNameError" class="feedback-form__error feedback-form__error_type_middle-name"></span>
+          <input id="phoneNumber" type="tel" class="feedback-form__input feedback-form__input_type_phone-number" placeholder="Телефон" required>
+          <span id="phoneNumberError" class="feedback-form__error feedback-form__error_type_phone-number"></span> 
+          <input id="email" type="email" class="feedback-form__input feedback-form__input_type_email" placeholder="E-mail" required>
+          <span id="emailError" class="feedback-form__error feedback-form__error_type_email"></span>
+        </fieldset>
         <div>
-            <input id="email" type="email" class="feedback-form__input feedback-form__input_type_email" placeholder="E-mail" required>
-            <span id="emailError" class="feedback-form__error feedback-form__error_type_email"></span>
-        </div>
-
-        <!-- </fieldset> -->
-        <div>
-            <button id="submitForm" class="feedback-form__button">Отправить</button>
+            <button id="submitForm" class="feedback-form__button-send">Отправить</button>
         </div>
 
       </form>
