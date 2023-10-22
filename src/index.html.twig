@@ -20,9 +20,16 @@
         <fieldset>
 
             <input id="loanAmount" type="number" class="calculator__input calculator__input_type_loan-amount" placeholder="Сумма займа">
+            <label for="loanAmount" class="placeholder">Сумма займа</label>
+
             <input id="initialPayment" type="number" class="calculator__input calculator__input_type_initial-payment" placeholder="Первоначальный взнос">
+            <label for="initialPayment" class="placeholder">Первоначальный взнос</label>
+
             <input id="interestRate" type="number" class="calculator__input calculator__input_type_interest-rate" placeholder="Процентная ставка" step="0.01">
+            <label for="interestRate" class="placeholder">Процентная ставка</label>
+
             <input id="loanTerm" type="number" class="calculator__input calculator__input_type_loan-term" placeholder="Срок кредитования">
+            <label for="loanTerm" class="placeholder">Срок кредитования</label>
 
         </fieldset>
 
@@ -34,8 +41,8 @@
       </form>
       <button id="toFeedbackFormButton" class="calculator__button calculator__button_type_submit" disabled type="submit">Оставить заявку</button>
     </section>
-    
-    <section id="feedbackFormScreen" class="calculator feedback-form">
+
+        <section id="feedbackFormScreen" class="calculator feedback-form">
 
       <div class="feedback-form__header">
         <button class="feedback-form__button feedback-form__button_type_back" id="backToCalculator" type="button">
@@ -47,11 +54,22 @@
       <form  class="feedback-form__form">
 
         <fieldset class="feedback-form__form-fieldset">
+
           <input id="lastName" type="text" class="feedback-form__input feedback-form__input_type_last-name" placeholder="Фамилия" required>
+          <label for="lastName" class="placeholder">Фамилия</label>
+
           <input id="firstName" type="text" class="feedback-form__input feedback-form__input_type_first-name" placeholder="Имя" required>
+          <label for="firstName" class="placeholder">Имя</label>
+
           <input id="middleName" type="text" class="feedback-form__input feedback-form__input_type_middle-name" placeholder="Отчество">
+          <label for="middleName" class="placeholder">Отчество</label>
+
           <input id="phoneNumber" type="tel" class="feedback-form__input feedback-form__input_type_phone-number" placeholder="Телефон" required>
+          <label for="phoneNumber" class="placeholder">Телефон</label>
+
           <input id="email" type="email" class="feedback-form__input feedback-form__input_type_email" placeholder="E-mail" required>
+          <label for="email" class="placeholder">E-mail</label>
+
         </fieldset>
         <div>
             <button id="submitForm" class="feedback-form__button-send">Отправить</button>
@@ -59,9 +77,9 @@
 
       </form>
   </section>
-  
   </div>
 <script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
+<script src="https://unpkg.com/imask"></script>
 <script src="/dist/assets/js/main.min.js"></script>
 </body>
 </html>

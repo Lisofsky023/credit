@@ -2,18 +2,50 @@
 
 document.addEventListener("DOMContentLoaded", function () {
   var form = document.getElementById("feedbackFormScreen");
-  var submitButton = document.getElementById("submitForm");
   var formFields = ["lastName", "firstName", "phoneNumber", "email"];
+  var mask;
+  var phoneNumberElement = document.getElementById('phoneNumber');
+  if (phoneNumberElement) {
+    var maskOptions = {
+      mask: '+{7}(000)000-00-00'
+    };
+    mask = IMask(phoneNumberElement, maskOptions);
+  }
+  var emailElement = document.getElementById('email');
+  if (emailElement) {
+    var emailMaskOptions = {
+      mask: /^\S*@?\S*$/
+    };
+    var emailMask = IMask(emailElement, emailMaskOptions);
+  }
   formFields.forEach(function (fieldId) {
     document.getElementById(fieldId).addEventListener("input", validateFormFields);
   });
   function validateFormFields() {
-    var formValues = {
-      lastName: document.getElementById("lastName").value,
-      firstName: document.getElementById("firstName").value,
-      phoneNumber: document.getElementById("phoneNumber").value,
-      email: document.getElementById("email").value
-    };
+    formFields.forEach(function (fieldId) {
+      var inputElement = document.getElementById(fieldId);
+      var labelElement = inputElement.nextElementSibling;
+      var value = fieldId === 'phoneNumber' ? mask.value : inputElement.value;
+      if (value.trim() === '') {
+        inputElement.classList.add('error');
+        inputElement.classList.remove('valid');
+        labelElement.style.color = 'red';
+      } else {
+        inputElement.classList.remove('error');
+        inputElement.classList.add('valid');
+        labelElement.style.color = 'purple';
+      }
+      inputElement.addEventListener('focus', function () {
+        if (this.value.trim() === '') {
+          labelElement.style.color = 'red';
+        }
+      });
+      inputElement.addEventListener('blur', function () {
+        if (this.value.trim() === '') {
+          labelElement.style.color = 'transparent';
+        }
+      });
+    });
   }
   form.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -21,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
       lastName: document.getElementById('lastName').value,
       firstName: document.getElementById('firstName').value,
       middleName: document.getElementById('middleName').value,
-      phoneNumber: document.getElementById('phoneNumber').value,
+      phoneNumber: mask.value,
       email: document.getElementById('email').value,
       loanAmount: document.getElementById('loanAmount').value,
       initialPayment: document.getElementById('initialPayment').value,
@@ -63,12 +95,15 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('feedbackFormScreen').classList.add('hidden');
+  function isValidValue(value) {
+    return value > 0;
+  }
   function calculateMonthlyPayment() {
     var loanAmount = parseFloat(document.getElementById('loanAmount').value) || 0;
     var initialPayment = parseFloat(document.getElementById('initialPayment').value) || 0;
     var interestRateYearly = (parseFloat(document.getElementById('interestRate').value) || 0) / 100;
     var loanTermYears = parseInt(document.getElementById('loanTerm').value) || 0;
-    if (loanAmount === 0 || interestRateYearly === 0 || loanTermYears === 0) {
+    if (!isValidValue(loanAmount) || !isValidValue(interestRateYearly) || !isValidValue(loanTermYears)) {
       return 0;
     }
     var interestRateMonthly = interestRateYearly / 12;
@@ -96,18 +131,49 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('monthlyPaymentResult').innerText = data.monthlyPaymentResult || "";
     }
   }
-  loadFromLocalStorage();
   var inputFields = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm'];
+  function checkFieldsAndSetButtonState() {
+    if (allFieldsFilled() && inputFields.every(function (id) {
+      return isValidValue(parseFloat(document.getElementById(id).value));
+    })) {
+      var monthlyPayment = calculateMonthlyPayment();
+      document.getElementById('monthlyPaymentResult').innerText = "".concat(monthlyPayment.toFixed(2), " \u20BD");
+      document.getElementById('toFeedbackFormButton').removeAttribute('disabled');
+    } else {
+      document.getElementById('monthlyPaymentResult').innerText = "Ошибка ввода";
+      document.getElementById('toFeedbackFormButton').setAttribute('disabled', 'disabled');
+    }
+  }
+  loadFromLocalStorage();
+  checkFieldsAndSetButtonState();
   inputFields.forEach(function (id) {
     var inputElement = document.getElementById(id);
+    var labelElement = inputElement.nextElementSibling; // предполагается, что label следует сразу после input
+
     if (inputElement) {
+      inputElement.addEventListener('focus', function () {
+        if (this.value.trim() === '') {
+          labelElement.style.color = 'red';
+        }
+      });
+      inputElement.addEventListener('blur', function () {
+        if (this.value.trim() === '') {
+          labelElement.style.color = 'transparent'; // скрываем label
+        }
+      });
+
       inputElement.addEventListener('input', function () {
-        if (allFieldsFilled()) {
-          var monthlyPayment = calculateMonthlyPayment();
-          document.getElementById('monthlyPaymentResult').innerText = "".concat(monthlyPayment.toFixed(2), " \u20BD");
-          document.getElementById('toFeedbackFormButton').removeAttribute('disabled');
+        if (isValidValue(parseFloat(this.value))) {
+          this.classList.remove('error');
+          this.classList.add('valid');
+          labelElement.style.color = 'purple';
+        } else {
+          this.classList.remove('valid');
+          this.classList.add('error');
+          labelElement.style.color = 'red';
         }
         saveToLocalStorage();
+        checkFieldsAndSetButtonState();
       });
     }
   });

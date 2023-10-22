@@ -34,6 +34,7 @@ fieldset {
   padding: 0;
   border: none;
   width: auto;
+  position: relative;
 }
 
 input {
@@ -216,5 +217,25 @@ input[type="number"] {
     left: 5px
   }
 }
+
+.placeholder {
+  position: absolute;
+  top: 0; /* расположение может немного отличаться в зависимости от вашего дизайна */
+  left: 5px; 
+  color: transparent; /* по умолчанию невидимый */
+  transform: translateY(-20px); /* сдвигаем вверх */
+  transition: color 0.3s, transform 0.3s;
+}
+
+input:focus + .placeholder,
+input:not(:placeholder-shown) + .placeholder {
+  color: red;
+}
+
+input.valid + .placeholder {
+  color: purple;
+}
+
+
 
 @import "./_medias";
