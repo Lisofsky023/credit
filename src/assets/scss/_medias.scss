@@ -2,6 +2,10 @@
   .calculator__monthly-payment-title {
     font-size: 15px;
   }
+
+  .feedback-form__form-fieldset {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 940px) {
@@ -14,6 +18,10 @@
 
     &__inputs {
       flex-direction: column;
+
+      &_fieldset {
+        margin-right: 0;
+      }
     }
 
     &__monthly-payment {
@@ -22,14 +30,6 @@
   }
 
   .feedback {
-    &-form__input {
-      &:first-of-type,
-      &:nth-of-type(2), 
-      &:nth-of-type(3),
-      &:nth-of-type(4) {
-        margin-right: 0;
-      }
-    } 
 
     &-form__button_type_back {
       max-width: 63px;
@@ -47,9 +47,12 @@
   }
 
   input {
-    margin-bottom: 16px;
-    margin-right: 0;
     width: 100%;
+  }
+
+  .input__wrapper {
+    width: 47%;
+    margin-bottom: 16px;
   }
 
   button {
@@ -64,6 +67,10 @@
       padding: 16px 24px;
       font-size: 12px;
     }
+  }
+
+  .input__wrapper {
+    width: 100%;
   }
 }
 

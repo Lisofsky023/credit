@@ -1,0 +1,38 @@
+{% block content %}
+  <section id="calculatorScreen" class="calculator">
+    <h1 class="calculator__button calculator__button_type_calculate">Рассчитайте платеж</h1>
+
+    <form class="calculator__inputs">
+      <fieldset class="calculator__inputs_fieldset">
+        <div class="input__wrapper">
+          <input id="loanAmount" type="number" class="calculator__input calculator__input_type_loan-amount" placeholder="Сумма займа">
+          <label for="loanAmount" class="placeholder">Сумма займа</label>
+        </div>
+
+        <div class="input__wrapper">
+          <input id="initialPayment" type="number" class="calculator__input calculator__input_type_initial-payment" placeholder="Первоначальный взнос">
+          <label for="initialPayment" class="placeholder">Первоначальный взнос</label>
+        </div>
+
+        <div class="input__wrapper">
+          <input id="interestRate" type="number" class="calculator__input calculator__input_type_interest-rate" placeholder="Процентная ставка" step="0.01">
+          <label for="interestRate" class="placeholder">Процентная ставка</label>
+        </div>
+
+        <div class="input__wrapper">
+          <input id="loanTerm" type="number" class="calculator__input calculator__input_type_loan-term" placeholder="Срок кредитования">
+          <label for="loanTerm" class="placeholder">Срок кредитования</label>
+        </div>
+      </fieldset>
+
+      <div class="calculator__monthly-payment">
+        <h2 class="calculator__monthly-payment-title">Ежемесячный платеж</h2>
+        <p id="monthlyPaymentResult" class="calculator__monthly-payment-result">0 ₽</p>
+      </div>
+    </form>
+
+    <button id="toFeedbackFormButton" class="calculator__button calculator__button_type_submit" disabled type="submit">
+      Оставить заявку
+    </button>
+  </section>
+{% endblock %}

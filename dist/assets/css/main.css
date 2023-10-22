@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 img, legend {
     border: 0;
@@ -214,6 +213,9 @@ fieldset {
     border: none;
     width: auto;
     position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 input {
@@ -251,6 +253,10 @@ input[type=number] {
     margin-bottom: 24px;
 }
 
+.calculator__inputs_fieldset {
+    margin-right: 16px;
+}
+
 .calculator__button {
     border-radius: 100px;
     font-weight: 800;
@@ -259,11 +265,11 @@ input[type=number] {
 .calculator__button_type_calculate {
     max-width: 254px;
     font-size: 16px;
-    padding: 18.5px 40px;
+    padding: 18px 40px;
     display: block;
     border: 3px solid #efeff3;
     color: #6d6f92;
-    background-color: #fff;
+    background-color: rgb(255, 255, 255);
     margin-bottom: 24px;
 }
 
@@ -281,11 +287,6 @@ input[type=number] {
 
 .calculator__input {
     box-sizing: border-box;
-    margin-right: 16px;
-}
-
-.calculator__input:first-child, .calculator__input:nth-child(2) {
-    margin-bottom: 20px;
 }
 
 .calculator__monthly-payment {
@@ -307,10 +308,6 @@ input[type=number] {
     font-size: 32px;
     color: rgb(154, 103, 255);
     font-weight: 800;
-}
-
-.feedback-form__svg-arrow:not(:root) {
-    overflow: visible;
 }
 
 .feedback-form__header {
@@ -336,18 +333,13 @@ input[type=number] {
 }
 
 .feedback-form__form-fieldset {
-    display: flex;
-    flex-wrap: wrap;
     margin-bottom: 24px;
-    position: relative;
 }
 
-.feedback-form__input:nth-of-type(1), .feedback-form__input:nth-of-type(2), .feedback-form__input:nth-of-type(4) {
-    margin-right: 16px;
-}
-
-.feedback-form__input:nth-of-type(1), .feedback-form__input:nth-of-type(2), .feedback-form__input:nth-of-type(3) {
-    margin-bottom: 16px;
+.feedback-form__form-fieldset::after {
+    content: "";
+    max-width: calc(65% - 400px);
+    flex: auto;
 }
 
 .feedback-form__title {
@@ -388,14 +380,11 @@ input[type=number] {
 
 .placeholder {
     position: absolute;
-    top: 0;
- /* расположение может немного отличаться в зависимости от вашего дизайна */
-    left: 5px;
+    top: 8px;
+    left: 23px;
     color: transparent;
- /* по умолчанию невидимый */
-    transform: translateY(-20px);
- /* сдвигаем вверх */
     transition: color 0.3s, transform 0.3s;
+    font-size: 10px;
 }
 
 input:not(:-moz-placeholder-shown) + .placeholder {
@@ -411,9 +400,18 @@ input.valid + .placeholder {
     color: purple;
 }
 
+.input__wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
 @media (max-width: 1330px) {
     .calculator__monthly-payment-title {
         font-size: 15px;
+    }
+
+    .feedback-form__form-fieldset {
+        flex-direction: column;
     }
 }
 
@@ -430,12 +428,12 @@ input.valid + .placeholder {
         flex-direction: column;
     }
 
-    .calculator__monthly-payment {
-        width: 100%;
+    .calculator__inputs_fieldset {
+        margin-right: 0;
     }
 
-    .feedback-form__input:first-of-type, .feedback-form__input:nth-of-type(2), .feedback-form__input:nth-of-type(3), .feedback-form__input:nth-of-type(4) {
-        margin-right: 0;
+    .calculator__monthly-payment {
+        width: 100%;
     }
 
     .feedback-form__button_type_back {
@@ -453,9 +451,12 @@ input.valid + .placeholder {
     }
 
     input {
-        margin-bottom: 16px;
-        margin-right: 0;
         width: 100%;
+    }
+
+    .input__wrapper {
+        width: 47%;
+        margin-bottom: 16px;
     }
 
     button {
@@ -468,5 +469,9 @@ input.valid + .placeholder {
         max-width: 193px;
         padding: 16px 24px;
         font-size: 12px;
+    }
+
+    .input__wrapper {
+        width: 100%;
     }
 }

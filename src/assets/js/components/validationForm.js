@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("feedbackFormScreen");
   const formFields = ["lastName", "firstName", "phoneNumber", "email"];
   let mask;
+
   const phoneNumberElement = document.getElementById('phoneNumber');
   if(phoneNumberElement) {
       const maskOptions = {
@@ -18,9 +19,33 @@ document.addEventListener("DOMContentLoaded", function() {
       const emailMask = IMask(emailElement, emailMaskOptions);
   }
 
-  formFields.forEach(fieldId => {
-      document.getElementById(fieldId).addEventListener("input", validateFormFields);
-  });
+  function saveFeedbackFormToLocalStorage() {
+      const data = {
+          lastName: document.getElementById('lastName').value,
+          firstName: document.getElementById('firstName').value,
+          middleName: document.getElementById('middleName').value,
+          phoneNumber: mask.value,
+          email: document.getElementById('email').value
+      };
+      localStorage.setItem('feedbackFormData', JSON.stringify(data));
+  }
+
+  function loadFeedbackFormFromLocalStorage() {
+      const data = JSON.parse(localStorage.getItem('feedbackFormData'));
+      if (data) {
+          document.getElementById('lastName').value = data.lastName || "";
+          document.getElementById('firstName').value = data.firstName || "";
+          document.getElementById('middleName').value = data.middleName || "";
+          mask.value = data.phoneNumber || "";
+
+          if (mask) {
+            mask.value = data.phoneNumber || "";
+            mask.updateValue(); // Синхронизация маски
+          
+          }
+          document.getElementById('email').value = data.email || "";
+      }
+  }
 
   function validateFormFields() {
       formFields.forEach(fieldId => {
@@ -28,14 +53,14 @@ document.addEventListener("DOMContentLoaded", function() {
           const labelElement = inputElement.nextElementSibling;
           const value = (fieldId === 'phoneNumber') ? mask.value : inputElement.value;
 
-          if (value.trim() === '') {
-              inputElement.classList.add('error');
-              inputElement.classList.remove('valid');
-              labelElement.style.color = 'red';
-          } else {
+          if (value.trim() !== '') {
               inputElement.classList.remove('error');
               inputElement.classList.add('valid');
               labelElement.style.color = 'purple';
+          } else {
+              inputElement.classList.add('error');
+              inputElement.classList.remove('valid');
+              labelElement.style.color = 'red';
           }
 
           inputElement.addEventListener('focus', function() {
@@ -50,7 +75,12 @@ document.addEventListener("DOMContentLoaded", function() {
               }
           });
       });
+      saveFeedbackFormToLocalStorage();
   }
+
+  formFields.forEach(fieldId => {
+      document.getElementById(fieldId).addEventListener("input", validateFormFields);
+  });
 
   form.addEventListener("submit", function(event) {
       event.preventDefault();
@@ -104,4 +134,7 @@ document.addEventListener("DOMContentLoaded", function() {
       document.getElementById('feedbackFormScreen').classList.add('hidden');
       document.getElementById('calculatorScreen').classList.remove('hidden');
   });
+
+  loadFeedbackFormFromLocalStorage();
+  validateFormFields();
 });

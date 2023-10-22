@@ -35,6 +35,9 @@ fieldset {
   border: none;
   width: auto;
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 input {
@@ -69,6 +72,10 @@ input[type="number"] {
   &__inputs {
     display: flex;
     margin-bottom: 24px;
+
+    &_fieldset {
+      margin-right: 16px;
+    }
   }
 
   &__button {
@@ -78,11 +85,11 @@ input[type="number"] {
     &_type_calculate {
       max-width: 254px;
       font-size: 16px;
-      padding: 18.5px 40px;
+      padding: 18px 40px;
       display: block;
       border: 3px solid #efeff3;
       color: #6d6f92;
-      background-color: #fff;
+      background-color: $color-white;
       margin-bottom: 24px;
     }
 
@@ -96,18 +103,12 @@ input[type="number"] {
     }
 
     &_type_submit:hover {
-      box-shadow: 0px 0px 25px 0px rgba(255, 255, 255, 1) inset;
+      box-shadow: 0px 0px 25px 0px $color-white inset;
     }
   }
 
   &__input {
     box-sizing: border-box;
-    margin-right: 16px;
-  }
-
-  &__input:first-child,
-  &__input:nth-child(2) {
-    margin-bottom: 20px;
   }
 
   &__monthly-payment {
@@ -130,10 +131,6 @@ input[type="number"] {
       font-weight: 800;
     }
   }
-}
-
-.feedback-form__svg-arrow:not(:root) {
-  overflow: visible;
 }
 
 .feedback-form {
@@ -163,22 +160,14 @@ input[type="number"] {
   }
 
   &__form-fieldset {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 24px;
-    position: relative;
-  }
-  
-  &__input:nth-of-type(1),
-  &__input:nth-of-type(2),
-  &__input:nth-of-type(4) {
-    margin-right: 16px;
-  }
 
-  &__input:nth-of-type(1),
-  &__input:nth-of-type(2),
-  &__input:nth-of-type(3) {
-      margin-bottom: 16px;
+    margin-bottom: 24px;
+
+    &::after {
+      content: "";
+      max-width: calc(65% - (400px));
+      flex: auto;
+    }
   }
 
   &__title {
@@ -214,17 +203,17 @@ input[type="number"] {
     color: $color-red;
     position: absolute;
     bottom: -18px;
-    left: 5px
+    left: 5px;
   }
 }
 
 .placeholder {
   position: absolute;
-  top: 0; /* расположение может немного отличаться в зависимости от вашего дизайна */
-  left: 5px; 
-  color: transparent; /* по умолчанию невидимый */
-  transform: translateY(-20px); /* сдвигаем вверх */
+  top: 8px; 
+  left: 23px; 
+  color: transparent; 
   transition: color 0.3s, transform 0.3s;
+  font-size: 10px;
 }
 
 input:focus + .placeholder,
@@ -236,6 +225,9 @@ input.valid + .placeholder {
   color: purple;
 }
 
-
+.input__wrapper {
+  position: relative;
+  margin-bottom: 20px;
+}
 
 @import "./_medias";

@@ -18,22 +18,44 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     var emailMask = IMask(emailElement, emailMaskOptions);
   }
-  formFields.forEach(function (fieldId) {
-    document.getElementById(fieldId).addEventListener("input", validateFormFields);
-  });
+  function saveFeedbackFormToLocalStorage() {
+    var data = {
+      lastName: document.getElementById('lastName').value,
+      firstName: document.getElementById('firstName').value,
+      middleName: document.getElementById('middleName').value,
+      phoneNumber: mask.value,
+      email: document.getElementById('email').value
+    };
+    localStorage.setItem('feedbackFormData', JSON.stringify(data));
+  }
+  function loadFeedbackFormFromLocalStorage() {
+    var data = JSON.parse(localStorage.getItem('feedbackFormData'));
+    if (data) {
+      document.getElementById('lastName').value = data.lastName || "";
+      document.getElementById('firstName').value = data.firstName || "";
+      document.getElementById('middleName').value = data.middleName || "";
+      mask.value = data.phoneNumber || "";
+      if (mask) {
+        mask.value = data.phoneNumber || "";
+        mask.updateValue(); // Синхронизация маски
+      }
+
+      document.getElementById('email').value = data.email || "";
+    }
+  }
   function validateFormFields() {
     formFields.forEach(function (fieldId) {
       var inputElement = document.getElementById(fieldId);
       var labelElement = inputElement.nextElementSibling;
       var value = fieldId === 'phoneNumber' ? mask.value : inputElement.value;
-      if (value.trim() === '') {
-        inputElement.classList.add('error');
-        inputElement.classList.remove('valid');
-        labelElement.style.color = 'red';
-      } else {
+      if (value.trim() !== '') {
         inputElement.classList.remove('error');
         inputElement.classList.add('valid');
         labelElement.style.color = 'purple';
+      } else {
+        inputElement.classList.add('error');
+        inputElement.classList.remove('valid');
+        labelElement.style.color = 'red';
       }
       inputElement.addEventListener('focus', function () {
         if (this.value.trim() === '') {
@@ -46,7 +68,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     });
+    saveFeedbackFormToLocalStorage();
   }
+  formFields.forEach(function (fieldId) {
+    document.getElementById(fieldId).addEventListener("input", validateFormFields);
+  });
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     var formData = {
@@ -92,24 +118,33 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('feedbackFormScreen').classList.add('hidden');
     document.getElementById('calculatorScreen').classList.remove('hidden');
   });
+  loadFeedbackFormFromLocalStorage();
+  validateFormFields();
 });
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('feedbackFormScreen').classList.add('hidden');
+  function isIntegerValue(value) {
+    return Number.isInteger(value);
+  }
   function isValidValue(value) {
-    return value > 0;
+    var checkInteger = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    return value > 0 && (!checkInteger || isIntegerValue(value));
+  }
+  function isValidLoanTerm(value) {
+    return value > 0 && value <= 5 && isIntegerValue(value);
   }
   function calculateMonthlyPayment() {
     var loanAmount = parseFloat(document.getElementById('loanAmount').value) || 0;
     var initialPayment = parseFloat(document.getElementById('initialPayment').value) || 0;
     var interestRateYearly = (parseFloat(document.getElementById('interestRate').value) || 0) / 100;
     var loanTermYears = parseInt(document.getElementById('loanTerm').value) || 0;
-    if (!isValidValue(loanAmount) || !isValidValue(interestRateYearly) || !isValidValue(loanTermYears)) {
+    if (!isValidValue(loanAmount, true) || !isValidValue(initialPayment, true) || !isValidValue(interestRateYearly) || !isValidLoanTerm(loanTermYears)) {
       return 0;
     }
     var interestRateMonthly = interestRateYearly / 12;
     var loanTermMonths = loanTermYears * 12;
     var monthlyPayment = (loanAmount - initialPayment) * Math.pow(1 + interestRateMonthly, loanTermMonths) * interestRateMonthly / (Math.pow(1 + interestRateMonthly, loanTermMonths) - 1);
-    return monthlyPayment < 0 ? 0 : monthlyPayment;
+    return monthlyPayment < 0 ? 0 : monthlyPayment.toFixed(2);
   }
   function saveToLocalStorage() {
     var data = {
@@ -131,58 +166,63 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('monthlyPaymentResult').innerText = data.monthlyPaymentResult || "";
     }
   }
-  var inputFields = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm'];
+  function updateLabelColors() {
+    var inputFields = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm'];
+    inputFields.forEach(function (id) {
+      var inputElement = document.getElementById(id);
+      var labelElement = inputElement.nextElementSibling;
+      if (isValidValue(parseFloat(inputElement.value))) {
+        labelElement.style.color = 'purple';
+      } else if (inputElement.value.trim() === '') {
+        labelElement.style.color = 'transparent';
+      } else {
+        labelElement.style.color = 'red';
+      }
+    });
+  }
   function checkFieldsAndSetButtonState() {
-    if (allFieldsFilled() && inputFields.every(function (id) {
-      return isValidValue(parseFloat(document.getElementById(id).value));
-    })) {
+    var inputFields = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm'];
+    if (inputFields.every(function (id) {
+      return document.getElementById(id).value.trim() !== "";
+    }) && isValidValue(parseFloat(document.getElementById('loanAmount').value), true) && isValidValue(parseFloat(document.getElementById('initialPayment').value), true) && isValidValue(parseFloat(document.getElementById('interestRate').value) / 100) && isValidLoanTerm(parseInt(document.getElementById('loanTerm').value))) {
       var monthlyPayment = calculateMonthlyPayment();
-      document.getElementById('monthlyPaymentResult').innerText = "".concat(monthlyPayment.toFixed(2), " \u20BD");
+      document.getElementById('monthlyPaymentResult').innerText = "".concat(monthlyPayment, " \u20BD");
       document.getElementById('toFeedbackFormButton').removeAttribute('disabled');
     } else {
-      document.getElementById('monthlyPaymentResult').innerText = "Ошибка ввода";
       document.getElementById('toFeedbackFormButton').setAttribute('disabled', 'disabled');
     }
   }
   loadFromLocalStorage();
   checkFieldsAndSetButtonState();
+  updateLabelColors();
+  var inputFields = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm'];
   inputFields.forEach(function (id) {
     var inputElement = document.getElementById(id);
-    var labelElement = inputElement.nextElementSibling; // предполагается, что label следует сразу после input
-
-    if (inputElement) {
-      inputElement.addEventListener('focus', function () {
-        if (this.value.trim() === '') {
-          labelElement.style.color = 'red';
-        }
-      });
-      inputElement.addEventListener('blur', function () {
-        if (this.value.trim() === '') {
-          labelElement.style.color = 'transparent'; // скрываем label
-        }
-      });
-
-      inputElement.addEventListener('input', function () {
-        if (isValidValue(parseFloat(this.value))) {
-          this.classList.remove('error');
-          this.classList.add('valid');
-          labelElement.style.color = 'purple';
-        } else {
-          this.classList.remove('valid');
-          this.classList.add('error');
-          labelElement.style.color = 'red';
-        }
-        saveToLocalStorage();
-        checkFieldsAndSetButtonState();
-      });
-    }
-  });
-  function allFieldsFilled() {
-    return inputFields.every(function (id) {
-      var inputElement = document.getElementById(id);
-      return inputElement && inputElement.value.trim() !== '';
+    var labelElement = inputElement.nextElementSibling;
+    inputElement.addEventListener('focus', function () {
+      if (this.value.trim() === '') {
+        labelElement.style.color = 'red';
+      }
     });
-  }
+    inputElement.addEventListener('blur', function () {
+      if (this.value.trim() === '') {
+        labelElement.style.color = 'transparent';
+      }
+    });
+    inputElement.addEventListener('input', function () {
+      if (isValidValue(parseFloat(this.value))) {
+        this.classList.remove('error');
+        this.classList.add('valid');
+        labelElement.style.color = 'purple';
+      } else {
+        this.classList.remove('valid');
+        this.classList.add('error');
+        labelElement.style.color = 'red';
+      }
+      saveToLocalStorage();
+      checkFieldsAndSetButtonState();
+    });
+  });
   document.getElementById('toFeedbackFormButton').addEventListener('click', function () {
     document.getElementById('calculatorScreen').classList.add('hidden');
     document.getElementById('feedbackFormScreen').classList.remove('hidden');

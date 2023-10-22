@@ -1,85 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/dist/assets/css/main.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Handjet:wght@300&family=Rajdhani&family=Roboto+Flex:opsz,wght@8..144,400;8..144,800&display=swap" rel="stylesheet">
-  <title>credit</title>
-</head>
-<body>
-  <div class="container">
-    <section id="calculatorScreen" class="calculator">
+  {% block head %}
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="/dist/assets/css/main.min.css">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@300&family=Rajdhani&family=Roboto+Flex:opsz,wght@8..144,400;8..144,800&display=swap" rel="stylesheet">
+      <title>credit</title>
+    </head>
+  {% endblock %}
 
-      <h1 class="calculator__button calculator__button_type_calculate">Рассчитайте платеж</h1>
+  <body>
+    {% block content %}
+      <div class="container">
 
-      <form class="calculator__inputs">
+        {% include "components/calculate.html.twig" %}
+        {% include "components/form.html.twig" %}
 
-        <fieldset>
-
-            <input id="loanAmount" type="number" class="calculator__input calculator__input_type_loan-amount" placeholder="Сумма займа">
-            <label for="loanAmount" class="placeholder">Сумма займа</label>
-
-            <input id="initialPayment" type="number" class="calculator__input calculator__input_type_initial-payment" placeholder="Первоначальный взнос">
-            <label for="initialPayment" class="placeholder">Первоначальный взнос</label>
-
-            <input id="interestRate" type="number" class="calculator__input calculator__input_type_interest-rate" placeholder="Процентная ставка" step="0.01">
-            <label for="interestRate" class="placeholder">Процентная ставка</label>
-
-            <input id="loanTerm" type="number" class="calculator__input calculator__input_type_loan-term" placeholder="Срок кредитования">
-            <label for="loanTerm" class="placeholder">Срок кредитования</label>
-
-        </fieldset>
-
-          <div class="calculator__monthly-payment">
-            <h2 class="calculator__monthly-payment-title">Ежемесячный платеж</h2>
-            <p id="monthlyPaymentResult" class="calculator__monthly-payment-result">0 ₽</p>
-          </div>
-
-      </form>
-      <button id="toFeedbackFormButton" class="calculator__button calculator__button_type_submit" disabled type="submit">Оставить заявку</button>
-    </section>
-
-        <section id="feedbackFormScreen" class="calculator feedback-form">
-
-      <div class="feedback-form__header">
-        <button class="feedback-form__button feedback-form__button_type_back" id="backToCalculator" type="button">
-          <img class="feedback-form__button__svg-arrow" src="./assets/images/arrow.png" alt="arrow-back">                
-        </button>
-        <h2 class="feedback-form__title">Оставьте заявку</h2>
       </div>
+    {% endblock %}
 
-      <form  class="feedback-form__form">
-
-        <fieldset class="feedback-form__form-fieldset">
-
-          <input id="lastName" type="text" class="feedback-form__input feedback-form__input_type_last-name" placeholder="Фамилия" required>
-          <label for="lastName" class="placeholder">Фамилия</label>
-
-          <input id="firstName" type="text" class="feedback-form__input feedback-form__input_type_first-name" placeholder="Имя" required>
-          <label for="firstName" class="placeholder">Имя</label>
-
-          <input id="middleName" type="text" class="feedback-form__input feedback-form__input_type_middle-name" placeholder="Отчество">
-          <label for="middleName" class="placeholder">Отчество</label>
-
-          <input id="phoneNumber" type="tel" class="feedback-form__input feedback-form__input_type_phone-number" placeholder="Телефон" required>
-          <label for="phoneNumber" class="placeholder">Телефон</label>
-
-          <input id="email" type="email" class="feedback-form__input feedback-form__input_type_email" placeholder="E-mail" required>
-          <label for="email" class="placeholder">E-mail</label>
-
-        </fieldset>
-        <div>
-            <button id="submitForm" class="feedback-form__button-send">Отправить</button>
-        </div>
-
-      </form>
-  </section>
-  </div>
-<script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
-<script src="https://unpkg.com/imask"></script>
-<script src="/dist/assets/js/main.min.js"></script>
-</body>
+    {% block scripts %}
+      <script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
+      <script src="https://unpkg.com/imask"></script>
+      {% if app.getEnvironment() == 'dev' %}
+        <script defer src="/js/main.js"></script>
+      {% else %}
+        <script defer src="/dist/assets/js/main.min.js"></script>
+      {% endif %}
+    {% endblock %}
+  </body>
 </html>
