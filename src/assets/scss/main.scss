@@ -71,7 +71,7 @@ input[type="number"] {
 
   &__inputs {
     display: flex;
-    margin-bottom: 24px;
+    margin-bottom: 4px;
 
     &_fieldset {
       margin-right: 16px;
@@ -142,15 +142,19 @@ input[type="number"] {
 
   &__button {
     &_type_back {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: url(../images/arrow-back.svg) no-repeat center;
       width: 82px;
       height: 64px;
       border-radius: 100px;
       border: 3px solid rgba(239, 239, 243, 1);
       background-color: $color-white;
       margin-right: 16px;
+      transition: 0.3s all ease-in-out;
+
+      &:hover {
+        border: 3px solid #9A67FF;
+        background: url(../images/arrow-back-hover.svg) no-repeat center;
+      }
     }
 
     &__svg-arrow {
@@ -160,8 +164,7 @@ input[type="number"] {
   }
 
   &__form-fieldset {
-
-    margin-bottom: 24px;
+    margin-bottom: 4px;
 
     &::after {
       content: "";

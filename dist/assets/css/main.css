@@ -250,7 +250,7 @@ input[type=number] {
 
 .calculator__inputs {
     display: flex;
-    margin-bottom: 24px;
+    margin-bottom: 4px;
 }
 
 .calculator__inputs_fieldset {
@@ -316,15 +316,19 @@ input[type=number] {
 }
 
 .feedback-form__button_type_back {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: url(../images/arrow-back.svg) no-repeat center;
     width: 82px;
     height: 64px;
     border-radius: 100px;
     border: 3px solid rgb(239, 239, 243);
     background-color: rgb(255, 255, 255);
     margin-right: 16px;
+    transition: 0.3s all ease-in-out;
+}
+
+.feedback-form__button_type_back:hover {
+    border: 3px solid #9A67FF;
+    background: url(../images/arrow-back-hover.svg) no-repeat center;
 }
 
 .feedback-form__button__svg-arrow {
@@ -333,7 +337,7 @@ input[type=number] {
 }
 
 .feedback-form__form-fieldset {
-    margin-bottom: 24px;
+    margin-bottom: 4px;
 }
 
 .feedback-form__form-fieldset::after {

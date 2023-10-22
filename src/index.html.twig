@@ -15,21 +15,15 @@
   <body>
     {% block content %}
       <div class="container">
-
         {% include "components/calculate.html.twig" %}
         {% include "components/form.html.twig" %}
-
       </div>
     {% endblock %}
 
     {% block scripts %}
       <script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
       <script src="https://unpkg.com/imask"></script>
-      {% if app.getEnvironment() == 'dev' %}
-        <script defer src="/js/main.js"></script>
-      {% else %}
-        <script defer src="/dist/assets/js/main.min.js"></script>
-      {% endif %}
+      <script defer src="/dist/assets/js/main.min.js"></script>
     {% endblock %}
   </body>
 </html>
