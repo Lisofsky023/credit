@@ -1,22 +1,12 @@
 
 @import "./normalize";
 @import "./_colors";
-@import "./_medias";
 
-*{
+*, h1, h2, h3{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
-// fieldset {
-//   margin: 0;
-//   padding: 0;
-//   border: none;
-//   display: block;
-//   width: 100%;
-//   box-sizing: border-box;
-// }
 
 body {
   font-family: 'Roboto Flex', sans-serif;
@@ -27,15 +17,12 @@ body {
 }
 
 .container {
-  width: 1440px;
-  height: 576px;
-  padding-top: 64px;
+  max-width: 1440px;
+  width: 100%;
+  height: auto;
+  padding: 64px 40px;
   margin: 0 auto;
   background-color: $color-light-gray;
-}
-
-.wrapper {
-  width: 1360px;
 }
 
 button {
@@ -70,8 +57,9 @@ input[type="number"] {
 }
 
 .calculator {
-  width: 1360px;
-  height: 448px;
+  max-width: 1360px;
+  width: 100%;
+  height: auto;
   margin: 0 auto;
   background-color: $color-white;
   border-radius: 64px;
@@ -81,17 +69,19 @@ input[type="number"] {
     display: flex;
     margin-bottom: 24px;
   }
+
   &__button {
-    cursor: pointer;
     border-radius: 100px;
     font-weight: 800;
     
-
     &_type_calculate {
-      padding: 18.5px 64px;
-      border: 3px solid rgba(239, 239, 243, 1);
-      color: $gray-dark;
-      background-color: $color-white;
+      max-width: 254px;
+      font-size: 16px;
+      padding: 18.5px 40px;
+      display: block;
+      border: 3px solid #efeff3;
+      color: #6d6f92;
+      background-color: #fff;
       margin-bottom: 24px;
     }
 
@@ -141,16 +131,9 @@ input[type="number"] {
   }
 }
 
-#arrrow {
-  fill: $color-purple;
-  width: 18px;
-  height: 12px;
-}
-
 .feedback-form__svg-arrow:not(:root) {
   overflow: visible;
 }
-
 
 .feedback-form {
   
@@ -161,12 +144,17 @@ input[type="number"] {
 
   &__button {
     &_type_back {
-      padding: 19px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 82px;
+      height: 64px;
       border-radius: 100px;
       border: 3px solid rgba(239, 239, 243, 1);
       background-color: $color-white;
       margin-right: 16px;
     }
+
     &__svg-arrow {
       width: 18px;
       height: auto;
@@ -177,6 +165,7 @@ input[type="number"] {
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 24px;
+    position: relative;
   }
   
   &__input:nth-of-type(1),
@@ -192,17 +181,19 @@ input[type="number"] {
   }
 
   &__title {
-    font-size: 16px;
-    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 216px;
     height: 64px;
-    padding: 24px 32px;
+    font-size: 16px;
+    font-weight: 800;
     border: 3px solid #efeff3;
     color: #6d6f92;
     border-radius: 100px;
     text-align: center;
-    line-height: 12px;
   }
+
   &__button-send {
     padding: 22.5px 31.5px;
     color: $color-white;
@@ -216,29 +207,14 @@ input[type="number"] {
   &__button-send:hover {
     box-shadow: 0px 0px 25px 0px rgba(255, 255, 255, 1) inset;
   }
+
+  &__error {
+    font-size: 12px;
+    color: $color-red;
+    position: absolute;
+    bottom: -18px;
+    left: 5px
+  }
 }
 
-  //   &_type_last-name { }
-
-  //   &_type_first-name { }
-
-  //   &_type_middle-name { }
-
-  //   &_type_phone-number { }
-
-  //   &_type_email { }
-  // }
-
-  // &__error {
-  //   &_type_last-name { }
-
-  //   &_type_first-name { }
-
-  //   &_type_middle-name { }
-
-  //   &_type_phone-number { }
-
-  //   &_type_email { }
-  // }
-
-  // 
+@import "./_medias";

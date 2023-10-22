@@ -1,0 +1,69 @@
+@media (max-width: 1330px) {
+  .calculator__monthly-payment-title {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 940px) {
+  .container {
+    padding: 32px 16px;
+  }
+
+  .calculator {
+    padding: 40px 32px;
+
+    &__inputs {
+      flex-direction: column;
+    }
+
+    &__monthly-payment {
+      width: 100%;
+    }
+  }
+
+  .feedback {
+    &-form__input {
+      &:first-of-type,
+      &:nth-of-type(2), 
+      &:nth-of-type(3),
+      &:nth-of-type(4) {
+        margin-right: 0;
+      }
+    } 
+
+    &-form__button_type_back {
+      max-width: 63px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 8px;
+    }
+
+    &-form__title {
+      font-size: 12px;
+      height: 44px;
+    }
+  }
+
+  input {
+    margin-bottom: 16px;
+    margin-right: 0;
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .calculator {
+    &__button_type_calculate {
+      max-width: 193px;
+      padding: 16px 24px;
+      font-size: 12px;
+    }
+  }
+}
+
