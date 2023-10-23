@@ -1,7 +1,7 @@
 # credit
 Ипотечный калькулятор
 
-[lisofsky023.github.io/credit/](https://lisofsky023.github.io/credit/](https://lisofsky023.github.io/credit/)
+https://lisofsky023.github.io/credit/
 
 # Install instruction
 
