@@ -2,12 +2,12 @@
 //= feedbackFormUI.js
 //= feedbackFormSubmit.js
 
+const phoneMask = setupPhoneNumberMask();
+const emailMask = setupEmailMask();
+
 document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("feedbackFormScreen");
   const formFields = ["lastName", "firstName", "phoneNumber", "email"];
-
-  setupPhoneNumberMask();
-  setupEmailMask();
 
   formFields.forEach(fieldId => {
       document.getElementById(fieldId).addEventListener("input", validateFormFields);
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   form.addEventListener("submit", function(event) {
       event.preventDefault();
-      submitFeedbackForm();
+      submitFeedbackForm(phoneMask, emailMask);
   });
 
   document.getElementById('toFeedbackFormButton').addEventListener('click', function() {
@@ -29,6 +29,9 @@ document.addEventListener("DOMContentLoaded", function() {
       document.getElementById('calculatorScreen').classList.remove('hidden');
   });
 
-  loadFeedbackFormFromLocalStorage();
-  validateFormFields();
+  loadFeedbackFormFromLocalStorage(phoneMask, emailMask);
+  validateFormFields(phoneMask, emailMask);
+  
 });
+
+

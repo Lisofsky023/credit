@@ -1,46 +1,69 @@
-let mask;
-
 function setupPhoneNumberMask() {
     const phoneNumberElement = document.getElementById('phoneNumber');
-    if(phoneNumberElement) {
+    let localMask;
+    if (phoneNumberElement) {
         const maskOptions = {
             mask: '+{7}(000)000-00-00'
         };
-        mask = IMask(phoneNumberElement, maskOptions);
+        localMask = IMask(phoneNumberElement, maskOptions);
+
+        phoneNumberElement.addEventListener('input', function() {
+            const unmaskedValue = localMask.unmaskedValue;
+            const labelElement = phoneNumberElement.nextElementSibling;
+
+            if (!unmaskedValue || unmaskedValue.length !== 11 || localMask.value.includes('_')) { 
+                phoneNumberElement.classList.add('error');
+                phoneNumberElement.classList.remove('valid');
+                labelElement.style.color = 'red';
+            } else {
+                phoneNumberElement.classList.remove('error');
+                phoneNumberElement.classList.add('valid');
+                labelElement.style.color = 'purple';
+            }
+        });
     }
+    return localMask;
 }
 
 function setupEmailMask() {
     const emailElement = document.getElementById('email');
-    if(emailElement) {
+    let localMask;
+    if (emailElement) {
         const emailMaskOptions = {
             mask: /^\S*@?\S*$/
         };
-        const emailMask = IMask(emailElement, emailMaskOptions);
+        localMask = IMask(emailElement, emailMaskOptions);
     }
+    return localMask;
 }
 
-function saveFeedbackFormToLocalStorage() {
+function saveFeedbackFormToLocalStorage(phoneMask, emailMask) {
     const data = {
         lastName: document.getElementById('lastName').value,
         firstName: document.getElementById('firstName').value,
         middleName: document.getElementById('middleName').value,
-        phoneNumber: mask.value,
+        phoneNumber: phoneMask ? phoneMask.value : "",
         email: document.getElementById('email').value
     };
     localStorage.setItem('feedbackFormData', JSON.stringify(data));
 }
 
-function loadFeedbackFormFromLocalStorage() {
+function loadFeedbackFormFromLocalStorage(phoneMask, emailMask) {
     const data = JSON.parse(localStorage.getItem('feedbackFormData'));
     if (data) {
         document.getElementById('lastName').value = data.lastName || "";
         document.getElementById('firstName').value = data.firstName || "";
         document.getElementById('middleName').value = data.middleName || "";
-        if (mask) {
-            mask.value = data.phoneNumber || "";
-            mask.updateValue();
+        
+        if (phoneMask && phoneMask.updateValue) {
+            phoneMask.value = data.phoneNumber || "";
+            phoneMask.updateValue();
         }
-        document.getElementById('email').value = data.email || "";
+
+        if (emailMask && emailMask.updateValue) {
+            document.getElementById('email').value = data.email || "";
+            emailMask.updateValue();
+        }
     }
 }
+

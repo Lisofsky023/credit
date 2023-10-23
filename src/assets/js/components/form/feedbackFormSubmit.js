@@ -1,9 +1,9 @@
-function submitFeedbackForm() {
+function submitFeedbackForm(phoneMask, emailMask) {
   const formData = {
       lastName: document.getElementById('lastName').value,
       firstName: document.getElementById('firstName').value,
       middleName: document.getElementById('middleName').value,
-      phoneNumber: mask.value,
+      phoneNumber: phoneMask.value,
       email: document.getElementById('email').value,
       loanAmount: document.getElementById('loanAmount').value,
       initialPayment: document.getElementById('initialPayment').value,

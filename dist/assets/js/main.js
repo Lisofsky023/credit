@@ -111,82 +111,118 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('calculatorScreen').classList.remove('hidden');
   });
 });
-var mask;
 function setupPhoneNumberMask() {
   var phoneNumberElement = document.getElementById('phoneNumber');
+  var localMask;
   if (phoneNumberElement) {
     var maskOptions = {
       mask: '+{7}(000)000-00-00'
     };
-    mask = IMask(phoneNumberElement, maskOptions);
+    localMask = IMask(phoneNumberElement, maskOptions);
+    phoneNumberElement.addEventListener('input', function () {
+      var unmaskedValue = localMask.unmaskedValue;
+      var labelElement = phoneNumberElement.nextElementSibling;
+      if (!unmaskedValue || unmaskedValue.length !== 11 || localMask.value.includes('_')) {
+        phoneNumberElement.classList.add('error');
+        phoneNumberElement.classList.remove('valid');
+        labelElement.style.color = 'red';
+      } else {
+        phoneNumberElement.classList.remove('error');
+        phoneNumberElement.classList.add('valid');
+        labelElement.style.color = 'purple';
+      }
+    });
   }
+  return localMask;
 }
 function setupEmailMask() {
   var emailElement = document.getElementById('email');
+  var localMask;
   if (emailElement) {
     var emailMaskOptions = {
       mask: /^\S*@?\S*$/
     };
-    var emailMask = IMask(emailElement, emailMaskOptions);
+    localMask = IMask(emailElement, emailMaskOptions);
   }
+  return localMask;
 }
-function saveFeedbackFormToLocalStorage() {
+function saveFeedbackFormToLocalStorage(phoneMask, emailMask) {
   var data = {
     lastName: document.getElementById('lastName').value,
     firstName: document.getElementById('firstName').value,
     middleName: document.getElementById('middleName').value,
-    phoneNumber: mask.value,
+    phoneNumber: phoneMask ? phoneMask.value : "",
     email: document.getElementById('email').value
   };
   localStorage.setItem('feedbackFormData', JSON.stringify(data));
 }
-function loadFeedbackFormFromLocalStorage() {
+function loadFeedbackFormFromLocalStorage(phoneMask, emailMask) {
   var data = JSON.parse(localStorage.getItem('feedbackFormData'));
   if (data) {
     document.getElementById('lastName').value = data.lastName || "";
     document.getElementById('firstName').value = data.firstName || "";
     document.getElementById('middleName').value = data.middleName || "";
-    if (mask) {
-      mask.value = data.phoneNumber || "";
-      mask.updateValue();
+    if (phoneMask && phoneMask.updateValue) {
+      phoneMask.value = data.phoneNumber || "";
+      phoneMask.updateValue();
     }
-    document.getElementById('email').value = data.email || "";
+    if (emailMask && emailMask.updateValue) {
+      document.getElementById('email').value = data.email || "";
+      emailMask.updateValue();
+    }
   }
 }
-function validateFormFields() {
-  var formFields = ["lastName", "firstName", "phoneNumber", "email"];
+function validateFormFields(phoneMask, emailMask) {
+  var formFields = ["lastName", "firstName", "middleName", "email"]; // Убран "phoneNumber"
+  var minimumChars = {
+    "lastName": 3,
+    "firstName": 3,
+    "middleName": 3
+  };
   formFields.forEach(function (fieldId) {
     var inputElement = document.getElementById(fieldId);
     var labelElement = inputElement.nextElementSibling;
-    var value = fieldId === 'phoneNumber' ? mask.value : inputElement.value;
-    if (value.trim() !== '') {
-      inputElement.classList.remove('error');
-      inputElement.classList.add('valid');
-      labelElement.style.color = 'purple';
-    } else {
-      inputElement.classList.add('error');
-      inputElement.classList.remove('valid');
-      labelElement.style.color = 'red';
-    }
-    inputElement.addEventListener('focus', function () {
-      if (this.value.trim() === '') {
+    labelElement.style.color = 'transparent';
+    function updateStyles() {
+      var value = inputElement.value;
+      if (fieldId === 'email') {
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+          inputElement.classList.add('error');
+          inputElement.classList.remove('valid');
+          labelElement.style.color = 'red';
+          return;
+        }
+      }
+      if (value && value.trim() !== '' && (!minimumChars[fieldId] || value.length >= minimumChars[fieldId])) {
+        inputElement.classList.remove('error');
+        inputElement.classList.add('valid');
+        labelElement.style.color = 'purple';
+      } else {
+        inputElement.classList.add('error');
+        inputElement.classList.remove('valid');
         labelElement.style.color = 'red';
       }
+    }
+    inputElement.addEventListener('focus', function () {
+      labelElement.style.color = 'red';
+      updateStyles();
     });
     inputElement.addEventListener('blur', function () {
       if (this.value.trim() === '') {
         labelElement.style.color = 'transparent';
       }
     });
+    inputElement.addEventListener('input', updateStyles);
   });
   saveFeedbackFormToLocalStorage();
 }
-function submitFeedbackForm() {
+function submitFeedbackForm(phoneMask, emailMask) {
   var formData = {
     lastName: document.getElementById('lastName').value,
     firstName: document.getElementById('firstName').value,
     middleName: document.getElementById('middleName').value,
-    phoneNumber: mask.value,
+    phoneNumber: phoneMask.value,
     email: document.getElementById('email').value,
     loanAmount: document.getElementById('loanAmount').value,
     initialPayment: document.getElementById('initialPayment').value,
@@ -216,17 +252,17 @@ function submitFeedbackForm() {
     alert('Произошла ошибка при отправке данных!');
   });
 }
+var phoneMask = setupPhoneNumberMask();
+var emailMask = setupEmailMask();
 document.addEventListener("DOMContentLoaded", function () {
   var form = document.getElementById("feedbackFormScreen");
   var formFields = ["lastName", "firstName", "phoneNumber", "email"];
-  setupPhoneNumberMask();
-  setupEmailMask();
   formFields.forEach(function (fieldId) {
     document.getElementById(fieldId).addEventListener("input", validateFormFields);
   });
   form.addEventListener("submit", function (event) {
     event.preventDefault();
-    submitFeedbackForm();
+    submitFeedbackForm(phoneMask, emailMask);
   });
   document.getElementById('toFeedbackFormButton').addEventListener('click', function () {
     document.getElementById('calculatorScreen').classList.add('hidden');
@@ -237,6 +273,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('feedbackFormScreen').classList.add('hidden');
     document.getElementById('calculatorScreen').classList.remove('hidden');
   });
-  loadFeedbackFormFromLocalStorage();
-  validateFormFields();
+  loadFeedbackFormFromLocalStorage(phoneMask, emailMask);
+  validateFormFields(phoneMask, emailMask);
 });
