@@ -438,6 +438,7 @@ input.valid + .placeholder {
 
     .calculator__monthly-payment {
         width: 100%;
+        margin-bottom: 24px;
     }
 
     .feedback-form__button_type_back {
