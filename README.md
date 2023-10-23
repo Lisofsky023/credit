@@ -1,9 +1,9 @@
 # credit
 Ипотечный калькулятор
-Twig
-Js
-SCSS
-GULP
+Twig,
+Js,
+SCSS,
+GULP,
 Babel
 
 https://lisofsky023.github.io/credit/
