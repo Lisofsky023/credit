@@ -1,20 +1,24 @@
 "use strict";
 
-function isIntegerValue(value) {
+var isIntegerValue = function isIntegerValue(value) {
   return Number.isInteger(value);
-}
-function isValidValue(value) {
+};
+var isValidValue = function isValidValue(value) {
   var checkInteger = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   return value > 0 && (!checkInteger || isIntegerValue(value));
-}
-function isValidLoanTerm(value) {
+};
+var isValidLoanTerm = function isValidLoanTerm(value) {
   return value > 0 && value <= 5 && isIntegerValue(value);
-}
+};
 function calculateMonthlyPayment() {
-  var loanAmount = parseFloat(document.getElementById('loanAmount').value) || 0;
-  var initialPayment = parseFloat(document.getElementById('initialPayment').value) || 0;
-  var interestRateYearly = (parseFloat(document.getElementById('interestRate').value) || 0) / 100;
-  var loanTermYears = parseInt(document.getElementById('loanTerm').value) || 0;
+  var loanAmountElement = document.getElementById('loanAmount');
+  var initialPaymentElement = document.getElementById('initialPayment');
+  var interestRateElement = document.getElementById('interestRate');
+  var loanTermElement = document.getElementById('loanTerm');
+  var loanAmount = parseFloat(loanAmountElement.value) || 0;
+  var initialPayment = parseFloat(initialPaymentElement.value) || 0;
+  var interestRateYearly = (parseFloat(interestRateElement.value) || 0) / 100;
+  var loanTermYears = parseInt(loanTermElement.value) || 0;
   if (!isValidValue(loanAmount, true) || !isValidValue(initialPayment, true) || !isValidValue(interestRateYearly) || !isValidLoanTerm(loanTermYears)) {
     return 0;
   }
@@ -34,13 +38,18 @@ function saveToLocalStorage() {
   localStorage.setItem('calculatorData', JSON.stringify(data));
 }
 function loadFromLocalStorage() {
+  var loanAmountElement = document.getElementById('loanAmount');
+  var initialPaymentElement = document.getElementById('initialPayment');
+  var interestRateElement = document.getElementById('interestRate');
+  var loanTermElement = document.getElementById('loanTerm');
+  var monthlyPaymentResultElement = document.getElementById('monthlyPaymentResult');
   var data = JSON.parse(localStorage.getItem('calculatorData'));
   if (data) {
-    document.getElementById('loanAmount').value = data.loanAmount || "";
-    document.getElementById('initialPayment').value = data.initialPayment || "";
-    document.getElementById('interestRate').value = data.interestRate || "";
-    document.getElementById('loanTerm').value = data.loanTerm || "";
-    document.getElementById('monthlyPaymentResult').innerText = data.monthlyPaymentResult || "";
+    loanAmountElement.value = data.loanAmount || "";
+    initialPaymentElement.value = data.initialPayment || "";
+    interestRateElement.value = data.interestRate || "";
+    loanTermElement.value = data.loanTerm || "";
+    monthlyPaymentResultElement.innerText = data.monthlyPaymentResult || "";
   }
 }
 function updateLabelColors() {
@@ -58,57 +67,64 @@ function updateLabelColors() {
   });
 }
 function checkFieldsAndSetButtonState() {
-  var inputFields = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm'];
-  if (inputFields.every(function (id) {
-    return document.getElementById(id).value.trim() !== "";
-  }) && isValidValue(parseFloat(document.getElementById('loanAmount').value), true) && isValidValue(parseFloat(document.getElementById('initialPayment').value), true) && isValidValue(parseFloat(document.getElementById('interestRate').value) / 100) && isValidLoanTerm(parseInt(document.getElementById('loanTerm').value))) {
+  var loanAmountElement = document.getElementById('loanAmount');
+  var initialPaymentElement = document.getElementById('initialPayment');
+  var interestRateElement = document.getElementById('interestRate');
+  var loanTermElement = document.getElementById('loanTerm');
+  var monthlyPaymentResultElement = document.getElementById('monthlyPaymentResult');
+  var toFeedbackFormButtonElement = document.getElementById('toFeedbackFormButton');
+  if (loanAmountElement.value.trim() !== "" && isValidValue(parseFloat(loanAmountElement.value), true) && isValidValue(parseFloat(initialPaymentElement.value), true) && isValidValue(parseFloat(interestRateElement.value) / 100) && isValidLoanTerm(parseInt(loanTermElement.value))) {
     var monthlyPayment = calculateMonthlyPayment();
-    document.getElementById('monthlyPaymentResult').innerText = "".concat(monthlyPayment, " \u20BD");
-    document.getElementById('toFeedbackFormButton').removeAttribute('disabled');
+    monthlyPaymentResultElement.innerText = "".concat(monthlyPayment, " \u20BD");
+    toFeedbackFormButtonElement.removeAttribute('disabled');
   } else {
-    document.getElementById('toFeedbackFormButton').setAttribute('disabled', 'disabled');
+    toFeedbackFormButtonElement.setAttribute('disabled', 'disabled');
   }
 }
 document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('feedbackFormScreen').classList.add('hidden');
+  var calculatorScreen = document.getElementById('calculatorScreen');
+  var feedbackFormScreen = document.getElementById('feedbackFormScreen');
+  var toFeedbackFormButton = document.getElementById('toFeedbackFormButton');
+  var backToCalculatorButton = document.getElementById('backToCalculator');
+  var inputFieldsIds = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm', 'middleName'];
+  feedbackFormScreen.classList.add('hidden');
   loadFromLocalStorage();
   checkFieldsAndSetButtonState();
   updateLabelColors();
-  var inputFields = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm', 'middleName'];
-  inputFields.forEach(function (id) {
+  inputFieldsIds.forEach(function (id) {
     var inputElement = document.getElementById(id);
     var labelElement = inputElement.nextElementSibling;
     inputElement.addEventListener('focus', function () {
-      if (this.value.trim() === '') {
+      if (inputElement.value.trim() === '') {
         labelElement.style.color = 'red';
       }
     });
     inputElement.addEventListener('blur', function () {
-      if (this.value.trim() === '') {
+      if (inputElement.value.trim() === '') {
         labelElement.style.color = 'transparent';
       }
     });
     inputElement.addEventListener('input', function () {
-      if (isValidValue(parseFloat(this.value))) {
-        this.classList.remove('error');
-        this.classList.add('valid');
+      if (isValidValue(parseFloat(inputElement.value))) {
+        inputElement.classList.remove('error');
+        inputElement.classList.add('valid');
         labelElement.style.color = 'purple';
       } else {
-        this.classList.remove('valid');
-        this.classList.add('error');
+        inputElement.classList.remove('valid');
+        inputElement.classList.add('error');
         labelElement.style.color = 'red';
       }
       saveToLocalStorage();
       checkFieldsAndSetButtonState();
     });
   });
-  document.getElementById('toFeedbackFormButton').addEventListener('click', function () {
-    document.getElementById('calculatorScreen').classList.add('hidden');
-    document.getElementById('feedbackFormScreen').classList.remove('hidden');
+  toFeedbackFormButton.addEventListener('click', function () {
+    calculatorScreen.classList.add('hidden');
+    feedbackFormScreen.classList.remove('hidden');
   });
-  document.getElementById('backToCalculator').addEventListener('click', function () {
-    document.getElementById('feedbackFormScreen').classList.add('hidden');
-    document.getElementById('calculatorScreen').classList.remove('hidden');
+  backToCalculatorButton.addEventListener('click', function () {
+    feedbackFormScreen.classList.add('hidden');
+    calculatorScreen.classList.remove('hidden');
   });
 });
 function setupPhoneNumberMask() {
@@ -119,9 +135,9 @@ function setupPhoneNumberMask() {
       mask: '+{7}(000)000-00-00'
     };
     localMask = IMask(phoneNumberElement, maskOptions);
+    var labelElement = phoneNumberElement.nextElementSibling;
     phoneNumberElement.addEventListener('input', function () {
       var unmaskedValue = localMask.unmaskedValue;
-      var labelElement = phoneNumberElement.nextElementSibling;
       if (!unmaskedValue || unmaskedValue.length !== 11 || localMask.value.includes('_')) {
         phoneNumberElement.classList.add('error');
         phoneNumberElement.classList.remove('valid');
@@ -146,28 +162,36 @@ function setupEmailMask() {
   }
   return localMask;
 }
-function saveFeedbackFormToLocalStorage(phoneMask, emailMask) {
+function saveFeedbackFormToLocalStorage(phoneMask) {
+  var lastNameElement = document.getElementById('lastName');
+  var firstNameElement = document.getElementById('firstName');
+  var middleNameElement = document.getElementById('middleName');
+  var emailElement = document.getElementById('email');
   var data = {
-    lastName: document.getElementById('lastName').value,
-    firstName: document.getElementById('firstName').value,
-    middleName: document.getElementById('middleName').value,
+    lastName: lastNameElement.value,
+    firstName: firstNameElement.value,
+    middleName: middleNameElement.value,
     phoneNumber: phoneMask ? phoneMask.value : "",
-    email: document.getElementById('email').value
+    email: emailElement.value
   };
   localStorage.setItem('feedbackFormData', JSON.stringify(data));
 }
 function loadFeedbackFormFromLocalStorage(phoneMask, emailMask) {
+  var lastNameElement = document.getElementById('lastName');
+  var firstNameElement = document.getElementById('firstName');
+  var middleNameElement = document.getElementById('middleName');
+  var emailElement = document.getElementById('email');
   var data = JSON.parse(localStorage.getItem('feedbackFormData'));
   if (data) {
-    document.getElementById('lastName').value = data.lastName || "";
-    document.getElementById('firstName').value = data.firstName || "";
-    document.getElementById('middleName').value = data.middleName || "";
+    lastNameElement.value = data.lastName || "";
+    firstNameElement.value = data.firstName || "";
+    middleNameElement.value = data.middleName || "";
     if (phoneMask && phoneMask.updateValue) {
       phoneMask.value = data.phoneNumber || "";
       phoneMask.updateValue();
     }
     if (emailMask && emailMask.updateValue) {
-      document.getElementById('email').value = data.email || "";
+      emailElement.value = data.email || "";
       emailMask.updateValue();
     }
   }
@@ -183,7 +207,7 @@ function validateFormFields(phoneMask, emailMask) {
     var inputElement = document.getElementById(fieldId);
     var labelElement = inputElement.nextElementSibling;
     labelElement.style.color = 'transparent';
-    function updateStyles() {
+    var updateStyles = function updateStyles() {
       var value = inputElement.value;
       if (fieldId === 'email') {
         var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -203,13 +227,13 @@ function validateFormFields(phoneMask, emailMask) {
         inputElement.classList.remove('valid');
         labelElement.style.color = 'red';
       }
-    }
+    };
     inputElement.addEventListener('focus', function () {
       labelElement.style.color = 'red';
       updateStyles();
     });
     inputElement.addEventListener('blur', function () {
-      if (this.value.trim() === '') {
+      if (inputElement.value.trim() === '') {
         labelElement.style.color = 'transparent';
       }
     });
@@ -254,24 +278,31 @@ function submitFeedbackForm(phoneMask, emailMask) {
 }
 var phoneMask = setupPhoneNumberMask();
 var emailMask = setupEmailMask();
+
+// Выносим элементы DOM в переменные
+var feedbackFormScreen = document.getElementById('feedbackFormScreen');
+var calculatorScreen = document.getElementById('calculatorScreen');
+var toFeedbackFormButton = document.getElementById('toFeedbackFormButton');
+var backToCalculator = document.getElementById('backToCalculator');
+var formFieldsElements = ["lastName", "firstName", "phoneNumber", "email"].map(function (id) {
+  return document.getElementById(id);
+});
 document.addEventListener("DOMContentLoaded", function () {
-  var form = document.getElementById("feedbackFormScreen");
-  var formFields = ["lastName", "firstName", "phoneNumber", "email"];
-  formFields.forEach(function (fieldId) {
-    document.getElementById(fieldId).addEventListener("input", validateFormFields);
+  formFieldsElements.forEach(function (fieldElement) {
+    fieldElement.addEventListener("input", validateFormFields);
   });
-  form.addEventListener("submit", function (event) {
+  feedbackFormScreen.addEventListener("submit", function (event) {
     event.preventDefault();
     submitFeedbackForm(phoneMask, emailMask);
   });
-  document.getElementById('toFeedbackFormButton').addEventListener('click', function () {
-    document.getElementById('calculatorScreen').classList.add('hidden');
-    document.getElementById('feedbackFormScreen').classList.remove('hidden');
+  toFeedbackFormButton.addEventListener('click', function () {
+    calculatorScreen.classList.add('hidden');
+    feedbackFormScreen.classList.remove('hidden');
   });
-  document.getElementById('backToCalculator').addEventListener('click', function (event) {
+  backToCalculator.addEventListener('click', function (event) {
     event.preventDefault();
-    document.getElementById('feedbackFormScreen').classList.add('hidden');
-    document.getElementById('calculatorScreen').classList.remove('hidden');
+    feedbackFormScreen.classList.add('hidden');
+    calculatorScreen.classList.remove('hidden');
   });
   loadFeedbackFormFromLocalStorage(phoneMask, emailMask);
   validateFormFields(phoneMask, emailMask);

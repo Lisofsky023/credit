@@ -1,15 +1,16 @@
 function setupPhoneNumberMask() {
     const phoneNumberElement = document.getElementById('phoneNumber');
     let localMask;
+
     if (phoneNumberElement) {
         const maskOptions = {
             mask: '+{7}(000)000-00-00'
         };
         localMask = IMask(phoneNumberElement, maskOptions);
+        const labelElement = phoneNumberElement.nextElementSibling;
 
-        phoneNumberElement.addEventListener('input', function() {
+        phoneNumberElement.addEventListener('input', () => {
             const unmaskedValue = localMask.unmaskedValue;
-            const labelElement = phoneNumberElement.nextElementSibling;
 
             if (!unmaskedValue || unmaskedValue.length !== 11 || localMask.value.includes('_')) { 
                 phoneNumberElement.classList.add('error');
@@ -28,6 +29,7 @@ function setupPhoneNumberMask() {
 function setupEmailMask() {
     const emailElement = document.getElementById('email');
     let localMask;
+
     if (emailElement) {
         const emailMaskOptions = {
             mask: /^\S*@?\S*$/
@@ -37,23 +39,34 @@ function setupEmailMask() {
     return localMask;
 }
 
-function saveFeedbackFormToLocalStorage(phoneMask, emailMask) {
+function saveFeedbackFormToLocalStorage(phoneMask) {
+    const lastNameElement = document.getElementById('lastName');
+    const firstNameElement = document.getElementById('firstName');
+    const middleNameElement = document.getElementById('middleName');
+    const emailElement = document.getElementById('email');
+
     const data = {
-        lastName: document.getElementById('lastName').value,
-        firstName: document.getElementById('firstName').value,
-        middleName: document.getElementById('middleName').value,
+        lastName: lastNameElement.value,
+        firstName: firstNameElement.value,
+        middleName: middleNameElement.value,
         phoneNumber: phoneMask ? phoneMask.value : "",
-        email: document.getElementById('email').value
+        email: emailElement.value
     };
     localStorage.setItem('feedbackFormData', JSON.stringify(data));
 }
 
 function loadFeedbackFormFromLocalStorage(phoneMask, emailMask) {
+    const lastNameElement = document.getElementById('lastName');
+    const firstNameElement = document.getElementById('firstName');
+    const middleNameElement = document.getElementById('middleName');
+    const emailElement = document.getElementById('email');
+
     const data = JSON.parse(localStorage.getItem('feedbackFormData'));
+
     if (data) {
-        document.getElementById('lastName').value = data.lastName || "";
-        document.getElementById('firstName').value = data.firstName || "";
-        document.getElementById('middleName').value = data.middleName || "";
+        lastNameElement.value = data.lastName || "";
+        firstNameElement.value = data.firstName || "";
+        middleNameElement.value = data.middleName || "";
         
         if (phoneMask && phoneMask.updateValue) {
             phoneMask.value = data.phoneNumber || "";
@@ -61,9 +74,8 @@ function loadFeedbackFormFromLocalStorage(phoneMask, emailMask) {
         }
 
         if (emailMask && emailMask.updateValue) {
-            document.getElementById('email').value = data.email || "";
+            emailElement.value = data.email || "";
             emailMask.updateValue();
         }
     }
 }
-

@@ -1,48 +1,54 @@
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('feedbackFormScreen').classList.add('hidden');
+document.addEventListener('DOMContentLoaded', () => {
+    const calculatorScreen = document.getElementById('calculatorScreen');
+    const feedbackFormScreen = document.getElementById('feedbackFormScreen');
+    const toFeedbackFormButton = document.getElementById('toFeedbackFormButton');
+    const backToCalculatorButton = document.getElementById('backToCalculator');
+    const inputFieldsIds = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm', 'middleName'];
 
-  loadFromLocalStorage();
-  checkFieldsAndSetButtonState();
-  updateLabelColors();
+    feedbackFormScreen.classList.add('hidden');
+    
+    loadFromLocalStorage();
+    checkFieldsAndSetButtonState();
+    updateLabelColors();
 
-  const inputFields = ['loanAmount', 'initialPayment', 'interestRate', 'loanTerm', 'middleName'];
-  inputFields.forEach(id => {
-      const inputElement = document.getElementById(id);
-      const labelElement = inputElement.nextElementSibling;
-  
-      inputElement.addEventListener('focus', function() {
-          if (this.value.trim() === '') {
-              labelElement.style.color = 'red';
-          }
-      });
-  
-      inputElement.addEventListener('blur', function() {
-          if (this.value.trim() === '') {
-              labelElement.style.color = 'transparent';
-          }
-      });
-  
-      inputElement.addEventListener('input', function() {
-          if (isValidValue(parseFloat(this.value))) {
-              this.classList.remove('error');
-              this.classList.add('valid');
-              labelElement.style.color = 'purple';
-          } else {
-              this.classList.remove('valid');
-              this.classList.add('error');
-              labelElement.style.color = 'red';
-          }
-          saveToLocalStorage();
-          checkFieldsAndSetButtonState();
-      });
-  });
+    inputFieldsIds.forEach(id => {
+        const inputElement = document.getElementById(id);
+        const labelElement = inputElement.nextElementSibling;
+    
+        inputElement.addEventListener('focus', () => {
+            if (inputElement.value.trim() === '') {
+                labelElement.style.color = 'red';
+            }
+        });
+    
+        inputElement.addEventListener('blur', () => {
+            if (inputElement.value.trim() === '') {
+                labelElement.style.color = 'transparent';
+            }
+        });
+    
+        inputElement.addEventListener('input', () => {
+            if (isValidValue(parseFloat(inputElement.value))) {
+                inputElement.classList.remove('error');
+                inputElement.classList.add('valid');
+                labelElement.style.color = 'purple';
+            } else {
+                inputElement.classList.remove('valid');
+                inputElement.classList.add('error');
+                labelElement.style.color = 'red';
+            }
+            saveToLocalStorage();
+            checkFieldsAndSetButtonState();
+        });
+    });
 
-  document.getElementById('toFeedbackFormButton').addEventListener('click', function () {
-      document.getElementById('calculatorScreen').classList.add('hidden');
-      document.getElementById('feedbackFormScreen').classList.remove('hidden');
-  });
-  document.getElementById('backToCalculator').addEventListener('click', function() {
-      document.getElementById('feedbackFormScreen').classList.add('hidden');
-      document.getElementById('calculatorScreen').classList.remove('hidden');
-  });
+    toFeedbackFormButton.addEventListener('click', () => {
+        calculatorScreen.classList.add('hidden');
+        feedbackFormScreen.classList.remove('hidden');
+    });
+    
+    backToCalculatorButton.addEventListener('click', () => {
+        feedbackFormScreen.classList.add('hidden');
+        calculatorScreen.classList.remove('hidden');
+    });
 });

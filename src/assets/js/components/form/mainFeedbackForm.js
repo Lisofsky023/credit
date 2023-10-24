@@ -5,33 +5,40 @@
 const phoneMask = setupPhoneNumberMask();
 const emailMask = setupEmailMask();
 
-document.addEventListener("DOMContentLoaded", function() {
-  const form = document.getElementById("feedbackFormScreen");
-  const formFields = ["lastName", "firstName", "phoneNumber", "email"];
+// Выносим элементы DOM в переменные
+const feedbackFormScreen = document.getElementById('feedbackFormScreen');
+const calculatorScreen = document.getElementById('calculatorScreen');
+const toFeedbackFormButton = document.getElementById('toFeedbackFormButton');
+const backToCalculator = document.getElementById('backToCalculator');
 
-  formFields.forEach(fieldId => {
-      document.getElementById(fieldId).addEventListener("input", validateFormFields);
+const formFieldsElements = [
+  "lastName", 
+  "firstName", 
+  "phoneNumber", 
+  "email"
+].map(id => document.getElementById(id));
+
+document.addEventListener("DOMContentLoaded", () => {
+  formFieldsElements.forEach(fieldElement => {
+      fieldElement.addEventListener("input", validateFormFields);
   });
 
-  form.addEventListener("submit", function(event) {
+  feedbackFormScreen.addEventListener("submit", (event) => {
       event.preventDefault();
       submitFeedbackForm(phoneMask, emailMask);
   });
 
-  document.getElementById('toFeedbackFormButton').addEventListener('click', function() {
-      document.getElementById('calculatorScreen').classList.add('hidden');
-      document.getElementById('feedbackFormScreen').classList.remove('hidden');
+  toFeedbackFormButton.addEventListener('click', () => {
+      calculatorScreen.classList.add('hidden');
+      feedbackFormScreen.classList.remove('hidden');
   });
 
-  document.getElementById('backToCalculator').addEventListener('click', function(event) {
+  backToCalculator.addEventListener('click', (event) => {
       event.preventDefault();
-      document.getElementById('feedbackFormScreen').classList.add('hidden');
-      document.getElementById('calculatorScreen').classList.remove('hidden');
+      feedbackFormScreen.classList.add('hidden');
+      calculatorScreen.classList.remove('hidden');
   });
 
   loadFeedbackFormFromLocalStorage(phoneMask, emailMask);
   validateFormFields(phoneMask, emailMask);
-  
 });
-
-

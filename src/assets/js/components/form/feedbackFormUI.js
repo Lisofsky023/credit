@@ -11,8 +11,9 @@ function validateFormFields(phoneMask, emailMask) {
         const labelElement = inputElement.nextElementSibling;
         labelElement.style.color = 'transparent';
 
-        function updateStyles() {
+        const updateStyles = () => {
             let value = inputElement.value;
+
             if (fieldId === 'email') {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(value)) {
@@ -21,8 +22,8 @@ function validateFormFields(phoneMask, emailMask) {
                     labelElement.style.color = 'red';
                     return;
                 }
-            } 
-        
+            }
+
             if (value && value.trim() !== '' && (!minimumChars[fieldId] || value.length >= minimumChars[fieldId])) {
                 inputElement.classList.remove('error');
                 inputElement.classList.add('valid');
@@ -33,14 +34,14 @@ function validateFormFields(phoneMask, emailMask) {
                 labelElement.style.color = 'red';
             }
         }
-        
-        inputElement.addEventListener('focus', function() {
+
+        inputElement.addEventListener('focus', () => {
             labelElement.style.color = 'red';
             updateStyles();
         });
 
-        inputElement.addEventListener('blur', function() {
-            if (this.value.trim() === '') {
+        inputElement.addEventListener('blur', () => {
+            if (inputElement.value.trim() === '') {
                 labelElement.style.color = 'transparent';
             }
         });
@@ -50,4 +51,3 @@ function validateFormFields(phoneMask, emailMask) {
 
     saveFeedbackFormToLocalStorage();
 }
-
