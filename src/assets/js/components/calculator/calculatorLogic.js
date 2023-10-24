@@ -2,7 +2,7 @@ const isIntegerValue = value => Number.isInteger(value);
 
 const isValidValue = (value, checkInteger = false) => value > 0 && (!checkInteger || isIntegerValue(value));
 
-const isValidLoanTerm = value => value > 0 && value <= 5 && isIntegerValue(value);
+const isValidLoanTerm = value => value > 0 && isIntegerValue(value);
 
 function calculateMonthlyPayment() {
     const loanAmountElement = document.getElementById('loanAmount');

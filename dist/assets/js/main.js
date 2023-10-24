@@ -8,7 +8,7 @@ var isValidValue = function isValidValue(value) {
   return value > 0 && (!checkInteger || isIntegerValue(value));
 };
 var isValidLoanTerm = function isValidLoanTerm(value) {
-  return value > 0 && value <= 5 && isIntegerValue(value);
+  return value > 0 && isIntegerValue(value);
 };
 function calculateMonthlyPayment() {
   var loanAmountElement = document.getElementById('loanAmount');
