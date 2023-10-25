@@ -1,6 +1,7 @@
 "use strict"
 
 const {src, dest} = require("gulp");
+const ghPages = require('gh-pages');
 const gulp = require("gulp");
 const twig = require('gulp-twig');
 const babel = require('gulp-babel');
@@ -129,6 +130,10 @@ function watchFiles() {
   gulp.watch([path.watch.img], images);
 };
 
+function deploy(cb) {
+  ghPages.publish('dist', cb);
+}
+
 const build = gulp.series(clean, gulp.parallel(html, css, js, fonts, images));
 const watch = gulp.parallel(build, watchFiles);
 
@@ -140,3 +145,4 @@ exports.images = images;
 exports.clean = clean;
 exports.build = build;
 exports.watch = watch;
+exports.deploy = deploy;
