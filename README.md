@@ -1,7 +1,7 @@
 # credit
 Ипотечный калькулятор
 Twig,
-Js,
+Js,(ES6+)
 SCSS,
 GULP,
 Babel
